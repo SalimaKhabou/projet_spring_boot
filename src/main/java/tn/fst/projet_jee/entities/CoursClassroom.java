@@ -1,6 +1,4 @@
 package tn.fst.projet_jee.entities;
-
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
