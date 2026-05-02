@@ -1,18 +1,14 @@
 package tn.fst.projet_jee.entities;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-        import java.util.List;
 
 /**
  * Entité représentant un utilisateur de l'application (étudiant, admin, etc.).
  *
- * Relations :
- * - Un utilisateur peut appartenir à plusieurs classes (@ManyToMany).
- *   → Côté "inverse" de la relation bidirectionnelle avec Classe.
- *   → mappedBy="utilisateurs" fait référence au champ dans Classe.
- *   → @JsonIgnore évite la récursion infinie lors de la sérialisation JSON.
+ * Selon le diagramme de classes :
+ * - La relation avec Classe est UNIDIRECTIONNELLE (Utilisateur 1 -> * Classe)
+ * - Utilisateur ne possède PAS de collection de classes
+ * - C'est Classe qui possède la référence vers Utilisateur (ManyToOne)
  */
 @Entity
 @Table(name = "utilisateur")
@@ -34,15 +30,6 @@ public class Utilisateur {
     /** Mot de passe de l'utilisateur (stocké en clair pour ce TP) */
     @Column(nullable = false)
     private String password;
-
-    /**
-     * Relation ManyToMany avec Classe.
-     * - mappedBy="utilisateurs" : Classe est le côté propriétaire (possède la table de jointure).
-     * - @JsonIgnore : évite la boucle infinie JSON (Utilisateur → Classe → Utilisateur → ...).
-     */
-    @ManyToMany(mappedBy = "utilisateurs")
-    @JsonIgnore
-    private List<Classe> classes;
 
     // ==================== Constructeurs ====================
 
@@ -67,9 +54,6 @@ public class Utilisateur {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-
-    public List<Classe> getClasses() { return classes; }
-    public void setClasses(List<Classe> classes) { this.classes = classes; }
 
     @Override
     public String toString() {

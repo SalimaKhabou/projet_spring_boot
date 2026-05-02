@@ -7,10 +7,14 @@ import java.util.List;
 /**
  * Entité représentant une classe (groupe d'étudiants) dans l'établissement.
  *
- * Relations bidirectionnelles :
- * 1. Classe <-> CoursClassroom : OneToMany / ManyToOne
- *    -> Classe peut avoir plusieurs CoursClassroom.
- *    -> Un CoursClassroom n'appartient qu'à une seule Classe.
+ * Relations selon le diagramme de classes :
+ * 1. Utilisateur -> Classe : Relation unidirectionnelle 1 to *
+ *    -> Une classe appartient à UN utilisateur (ManyToOne)
+ *    -> Un utilisateur peut avoir plusieurs classes (OneToMany du côté Utilisateur non mappé)
+ *
+ * 2. Classe <-> CoursClassroom : Relation bidirectionnelle OneToMany / ManyToOne
+ *    -> Une classe peut avoir plusieurs CoursClassroom
+ *    -> Un CoursClassroom n'appartient qu'à une seule Classe
  */
 @Entity
 @Table(name = "classe")
@@ -35,21 +39,14 @@ public class Classe {
     private Niveau niveau;
 
     /**
-     * Relation ManyToMany avec Utilisateur.
-     * - Classe est le côté propriétaire -> elle possède la table de jointure.
-     * - @JoinTable définit le nom de la table intermédiaire et ses colonnes.
-     * - CORRECTION : cascade = {PERSIST, MERGE} uniquement (pas ALL).
-     *   CascadeType.ALL sur ManyToMany est dangereux : un delete de Classe
-     *   tenterait de supprimer les Utilisateurs même s'ils appartiennent à d'autres classes.
-     * - fetch = LAZY : les utilisateurs ne sont chargés que si on y accède.
+     * Relation ManyToOne avec Utilisateur (relation unidirectionnelle).
+     * - Classe possède la clé étrangère vers Utilisateur
+     * - Un utilisateur peut avoir plusieurs classes (1 -> *)
+     * - @JoinColumn définit le nom de la colonne FK en base
      */
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "classe_utilisateur",
-            joinColumns = @JoinColumn(name = "codeClasse"),
-            inverseJoinColumns = @JoinColumn(name = "idUtilisateur")
-    )
-    private List<Utilisateur> utilisateurs;
+    @ManyToOne
+    @JoinColumn(name = "id_utilisateur")
+    private Utilisateur utilisateur;
 
     /**
      * Relation OneToMany avec CoursClassroom.
@@ -80,8 +77,8 @@ public class Classe {
     public Niveau getNiveau() { return niveau; }
     public void setNiveau(Niveau niveau) { this.niveau = niveau; }
 
-    public List<Utilisateur> getUtilisateurs() { return utilisateurs; }
-    public void setUtilisateurs(List<Utilisateur> utilisateurs) { this.utilisateurs = utilisateurs; }
+    public Utilisateur getUtilisateur() { return utilisateur; }
+    public void setUtilisateur(Utilisateur utilisateur) { this.utilisateur = utilisateur; }
 
     public List<CoursClassroom> getCoursClassrooms() { return coursClassrooms; }
     public void setCoursClassrooms(List<CoursClassroom> coursClassrooms) { this.coursClassrooms = coursClassrooms; }

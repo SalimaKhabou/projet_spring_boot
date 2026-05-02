@@ -97,12 +97,15 @@ public class CoursClassroomServiceImpl implements ICoursClassroomService {
     // =====================================================================
 
     /**
-     * Affecte un utilisateur à une classe (côté Classe, relation ManyToMany).
+     * Affecte un utilisateur à une classe (relation unidirectionnelle ManyToOne).
      *
      * Étapes :
      * 1. Charger l'Utilisateur et la Classe depuis la base
-     * 2. Ajouter l'utilisateur à la liste des utilisateurs de la classe
-     * 3. Sauvegarder la classe (la table de jointure sera mise à jour)
+     * 2. Définir l'utilisateur de la classe (setUtilisateur)
+     * 3. Sauvegarder la classe (la FK id_utilisateur sera mise à jour)
+     *
+     * Note : Selon le diagramme, la relation est 1 Utilisateur -> * Classe (unidirectionnelle)
+     * Donc une classe a UN seul utilisateur, pas une liste.
      *
      * @param idUtilisateur l'ID de l'utilisateur à affecter
      * @param codeClasse    l'ID de la classe cible
@@ -118,20 +121,10 @@ public class CoursClassroomServiceImpl implements ICoursClassroomService {
         Classe classe = classeRepository.findById(codeClasse)
                 .orElseThrow(() -> new RuntimeException("Classe introuvable : " + codeClasse));
 
-        // Ajouter l'utilisateur dans la liste de la classe (côté propriétaire)
-        List<Utilisateur> utilisateurs = classe.getUtilisateurs();
-        if (utilisateurs == null) {
-            utilisateurs = new java.util.ArrayList<>();
-        }
+        // Affecter l'utilisateur à la classe (relation ManyToOne)
+        classe.setUtilisateur(utilisateur);
 
-        // Éviter les doublons : n'ajouter que si pas déjà présent
-        if (!utilisateurs.contains(utilisateur)) {
-            utilisateurs.add(utilisateur);
-        }
-
-        classe.setUtilisateurs(utilisateurs);
-
-        // Sauvegarder → met à jour la table de jointure "classe_utilisateur"
+        // Sauvegarder → met à jour la FK "id_utilisateur" dans la table "classe"
         classeRepository.save(classe);
     }
 

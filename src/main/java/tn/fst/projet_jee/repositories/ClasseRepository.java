@@ -29,15 +29,15 @@ public interface ClasseRepository extends JpaRepository<Classe, Integer> {
     /**
      * Compte le nombre d'utilisateurs (étudiants) dans les classes d'un niveau donné.
      *
-     * Requête JPQL :
+     * Requête JPQL adaptée à la relation unidirectionnelle ManyToOne :
      * - "c" est un alias pour Classe
-     * - "u" est un alias pour les Utilisateur dans la liste c.utilisateurs
+     * - Maintenant Classe a un seul utilisateur (c.utilisateur), pas une liste
      * - On filtre sur le niveau passé en paramètre
-     * - On compte les utilisateurs distincts (pour éviter les doublons si un user est dans plusieurs classes du même niveau)
+     * - On compte les utilisateurs distincts (au cas où un utilisateur aurait plusieurs classes)
      *
      * @param nv le niveau à filtrer
-     * @return le nombre total d'utilisateurs dans les classes de ce niveau
+     * @return le nombre total d'utilisateurs distincts ayant des classes de ce niveau
      */
-    @Query("SELECT COUNT(DISTINCT u) FROM Classe c JOIN c.utilisateurs u WHERE c.niveau = :nv")
+    @Query("SELECT COUNT(DISTINCT c.utilisateur) FROM Classe c WHERE c.niveau = :nv AND c.utilisateur IS NOT NULL")
     Integer countUtilisateursByNiveau(@Param("nv") Niveau nv);
 }
