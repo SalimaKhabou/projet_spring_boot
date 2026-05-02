@@ -25,7 +25,6 @@ import java.util.List;
  *
  * Table générée :
  *   classe(code_classe PK, titre UNIQUE, niveau VARCHAR)
- *   Aucune FK vers utilisateur dans cette table ✓
  */
 @Entity
 @Table(name = "classe")
@@ -46,8 +45,8 @@ public class Classe {
      * Niveau de la classe.
      *
      * @Enumerated(EnumType.STRING)
-     *   ✓ Stocke la valeur textuelle "QUATRIEME" (pas l'index ordinal 3)
-     *   ✓ La base de données contiendra des chaînes lisibles
+     *   Stocke la valeur textuelle "QUATRIEME" (pas l'index ordinal 3)
+     *   La base de données contiendra des chaînes lisibles
      *   Sans cette annotation → Hibernate stockerait 0, 1, 2, 3, 4 (illisible)
      */
     @Enumerated(EnumType.STRING)

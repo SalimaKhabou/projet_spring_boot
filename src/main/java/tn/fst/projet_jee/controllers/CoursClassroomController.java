@@ -9,21 +9,16 @@ import org.springframework.web.bind.annotation.*;
  * Contrôleur REST exposant les endpoints de l'API.
  *
  * @RestController : combinaison de @Controller + @ResponseBody
- *   -> toutes les méthodes retournent directement du JSON (pas de vue JSP/Thymeleaf).
+ *   -> toutes les méthodes retournent directement du JSON .
  *
  * @RequestMapping("/api") : préfixe commun à tous les endpoints de ce contrôleur.
- *   -> Ex: http://localhost:8089/api/ajouterUtilisateur
- *
- * Toutes les méthodes sont testables via Swagger UI :
- *   -> http://localhost:8089/swagger-ui/index.html
- * Ou via Postman en ciblant les URLs correspondantes.
  */
 @RestController
 @RequestMapping("/api")
 public class CoursClassroomController {
 
     /**
-     * Injection du service via l'interface (bonne pratique).
+     * Injection du service via l'interface .
      * Spring injecte automatiquement CoursClassroomServiceImpl.
      */
     @Autowired
@@ -31,7 +26,6 @@ public class CoursClassroomController {
 
     // =====================================================================
     // PARTIE II - a) Ajouter un utilisateur
-    // Signature imposée : public Utilisateur ajouterUtilisateur(Utilisateur utilisateur)
     // =====================================================================
 
     /**
@@ -55,7 +49,6 @@ public class CoursClassroomController {
 
     // =====================================================================
     // PARTIE II - b) Ajouter une classe
-    // Signature imposée : public Classe ajouterClasse(Classe c)
     // =====================================================================
 
     /**
@@ -66,9 +59,7 @@ public class CoursClassroomController {
      * {
      *   "titre": "4AG1",
      *   "niveau": "QUATRIEME"
-     * }
-     *
-     * @return la classe sauvegardée avec son codeClasse généré
+     *}
      */
     @PostMapping("/ajouterClasse")
     public Classe ajouterClasse(@RequestBody Classe c) {
@@ -77,7 +68,6 @@ public class CoursClassroomController {
 
     // =====================================================================
     // PARTIE II - c) Ajouter un CoursClassroom et l'affecter à une classe
-    // Signature imposée : public CoursClassroom ajouterCoursClassroom(CoursClassroom cc, Integer codeClasse)
     // =====================================================================
 
     /**
@@ -104,7 +94,6 @@ public class CoursClassroomController {
 
     // =====================================================================
     // PARTIE II - d) Affecter un utilisateur à une classe
-    // Signature imposée : public void affecterUtilisateurClasse(Integer idUtilisateur, Integer codeClasse)
     // =====================================================================
 
     /**
@@ -124,7 +113,6 @@ public class CoursClassroomController {
 
     // =====================================================================
     // PARTIE II - e) Nombre d'utilisateurs par niveau
-    // Signature imposée : public Integer nbUtilisateursParNiveau(Niveau nv)
     // =====================================================================
 
     /**
@@ -141,7 +129,6 @@ public class CoursClassroomController {
 
     // =====================================================================
     // PARTIE II - f) Désaffecter un CoursClassroom de sa classe
-    // Signature imposée : public void desaffecterCoursClassroomClasse(Integer idCours)
     // =====================================================================
 
     /**
@@ -177,7 +164,6 @@ public class CoursClassroomController {
 
     // =====================================================================
     // PARTIE II - h) Nombre d'heures par spécialité et niveau
-    // Signature imposée : public Integer nbHeuresParSpecEtNiv(Specialite sp, Niveau nv)
     // =====================================================================
 
     /**
