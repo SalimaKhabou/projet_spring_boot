@@ -30,7 +30,6 @@ public class Utilisateur {
 
     /**
      * Clé primaire — stratégie IDENTITY = AUTO_INCREMENT MySQL.
-     * Exigence de l'énoncé : "identifiants auto-générés avec la stratégie IDENTITY" ✓
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

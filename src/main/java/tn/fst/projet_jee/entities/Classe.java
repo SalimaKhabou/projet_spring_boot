@@ -20,8 +20,7 @@ import java.util.List;
  * ║     → CoursClassroom côté PROPRIÉTAIRE : @ManyToOne + @JoinCol  ║
  * ║                                                                  ║
  * ║  Énumération Niveau :                                            ║
- * ║     @Enumerated(EnumType.STRING) → stocke "QUATRIEME" en base   ║
- * ║     Exigence de l'énoncé : ✓                                    ║
+ * ║     @Enumerated(EnumType.STRING) → stocke "QUATRIEME" en base    ║
  * ╚══════════════════════════════════════════════════════════════════╝
  *
  * Table générée :
@@ -34,7 +33,6 @@ public class Classe {
 
     /**
      * Clé primaire — stratégie IDENTITY = AUTO_INCREMENT MySQL.
-     * Exigence de l'énoncé : "identifiants auto-générés avec la stratégie IDENTITY" ✓
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +45,7 @@ public class Classe {
     /**
      * Niveau de la classe.
      *
-     * @Enumerated(EnumType.STRING) ← OBLIGATOIRE selon l'énoncé
+     * @Enumerated(EnumType.STRING)
      *   ✓ Stocke la valeur textuelle "QUATRIEME" (pas l'index ordinal 3)
      *   ✓ La base de données contiendra des chaînes lisibles
      *   Sans cette annotation → Hibernate stockerait 0, 1, 2, 3, 4 (illisible)
