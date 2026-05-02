@@ -1,19 +1,16 @@
 package tn.fst.projet_jee.entities;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-        import java.util.List;
+import java.util.List;
 
 /**
  * Entité représentant une classe (groupe d'étudiants) dans l'établissement.
  *
  * Relations bidirectionnelles :
- * 1. Classe ↔ Utilisateur : ManyToMany
- *    → Classe est le côté PROPRIÉTAIRE (possède la table de jointure "classe_utilisateur").
- * 2. Classe ↔ CoursClassroom : OneToMany / ManyToOne
- *    → Classe peut avoir plusieurs CoursClassroom.
- *    → Un CoursClassroom n'appartient qu'à une seule Classe.
+ * 1. Classe <-> CoursClassroom : OneToMany / ManyToOne
+ *    -> Classe peut avoir plusieurs CoursClassroom.
+ *    -> Un CoursClassroom n'appartient qu'à une seule Classe.
  */
 @Entity
 @Table(name = "classe")
@@ -30,7 +27,7 @@ public class Classe {
 
     /**
      * Niveau de la classe (ex: QUATRIEME, CINQUIEME).
-     * @Enumerated(EnumType.STRING) → stocke la valeur textuelle en base ("QUATRIEME")
+     * @Enumerated(EnumType.STRING) -> stocke la valeur textuelle en base ("QUATRIEME")
      * et non l'index ordinal (0, 1, 2...).
      */
     @Enumerated(EnumType.STRING)
@@ -39,12 +36,14 @@ public class Classe {
 
     /**
      * Relation ManyToMany avec Utilisateur.
-     * - Classe est le côté propriétaire → elle possède la table de jointure.
+     * - Classe est le côté propriétaire -> elle possède la table de jointure.
      * - @JoinTable définit le nom de la table intermédiaire et ses colonnes.
-     * - cascade = ALL : toute opération sur Classe se répercute sur les utilisateurs liés.
+     * - CORRECTION : cascade = {PERSIST, MERGE} uniquement (pas ALL).
+     *   CascadeType.ALL sur ManyToMany est dangereux : un delete de Classe
+     *   tenterait de supprimer les Utilisateurs même s'ils appartiennent à d'autres classes.
      * - fetch = LAZY : les utilisateurs ne sont chargés que si on y accède.
      */
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "classe_utilisateur",
             joinColumns = @JoinColumn(name = "codeClasse"),
@@ -55,7 +54,7 @@ public class Classe {
     /**
      * Relation OneToMany avec CoursClassroom.
      * - mappedBy="classe" : CoursClassroom est le côté propriétaire (possède la FK).
-     * - @JsonIgnore : évite la boucle infinie JSON (Classe → CoursClassroom → Classe → ...).
+     * - @JsonIgnore : évite la boucle infinie JSON (Classe -> CoursClassroom -> Classe -> ...).
      */
     @OneToMany(mappedBy = "classe", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore

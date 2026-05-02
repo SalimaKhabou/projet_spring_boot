@@ -1,6 +1,5 @@
 package tn.fst.projet_jee.controllers;
 
-
 import tn.fst.projet_jee.entities.*;
 import tn.fst.projet_jee.services.ICoursClassroomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
  * Contrôleur REST exposant les endpoints de l'API.
  *
  * @RestController : combinaison de @Controller + @ResponseBody
- *   → toutes les méthodes retournent directement du JSON (pas de vue JSP/Thymeleaf).
+ *   -> toutes les méthodes retournent directement du JSON (pas de vue JSP/Thymeleaf).
  *
  * @RequestMapping("/api") : préfixe commun à tous les endpoints de ce contrôleur.
- *   → Ex: http://localhost:8089/api/ajouterUtilisateur
+ *   -> Ex: http://localhost:8089/api/ajouterUtilisateur
  *
  * Toutes les méthodes sont testables via Swagger UI :
- *   → http://localhost:8089/swagger-ui/index.html
+ *   -> http://localhost:8089/swagger-ui/index.html
  * Ou via Postman en ciblant les URLs correspondantes.
  */
 @RestController
@@ -133,9 +132,6 @@ public class CoursClassroomController {
      *
      * URL : GET http://localhost:8089/api/nbUtilisateursParNiveau?nv=QUATRIEME
      *
-     * @PathVariable vs @RequestParam : ici on utilise @RequestParam car le niveau
-     * est un paramètre de filtre, pas un identifiant de ressource.
-     *
      * @return le nombre d'utilisateurs dans les classes du niveau spécifié
      */
     @GetMapping("/nbUtilisateursParNiveau")
@@ -189,8 +185,15 @@ public class CoursClassroomController {
      *
      * URL : GET http://localhost:8089/api/nbHeuresParSpecEtNiv?sp=AGRICULTURE&nv=QUATRIEME
      *
-     * Test demandé : AGRICULTURE + QUATRIEME → doit retourner 25 + 40 = 65 heures
-     * (Plantes = 25h et Sciences Naturelles = 40h, toutes deux en AGRICULTURE pour 4AG1/QUATRIEME)
+     * Test demandé : AGRICULTURE + QUATRIEME
+     * -> Si testé AVANT la désaffectation de "Plantes" (question f) :
+     *    Plantes (25h) + Sciences Naturelles (40h) = 65 heures
+     * -> Si testé APRÈS la désaffectation de "Plantes" (question f) :
+     *    La jointure INNER JOIN exclut les cours sans classe (FK=null)
+     *    Résultat = 40 heures (Sciences Naturelles uniquement)
+     *
+     * IMPORTANT : Dans l'ordre de l'énoncé, f) précède h), donc le résultat
+     * attendu lors du test final est 40 heures.
      *
      * @return le total des heures correspondant aux critères
      */
